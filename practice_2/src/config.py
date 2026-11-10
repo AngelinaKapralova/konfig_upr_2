@@ -1,7 +1,9 @@
 """Разбор и проверка параметров командной строки."""
 import re
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from urllib.parse import urlparse
+
 from errors import ConfigError
 
 DEFAULT_DEPTH = 3
@@ -11,7 +13,6 @@ OUTPUT_SUFFIX = ".svg"
 APT_NAME_RE = re.compile(r"[a-z0-9][a-z0-9+.\-]+")
 TEST_NAME_RE = re.compile(r"[A-Z]+")
 VERSION_RE = re.compile(r"[0-9A-Za-z.+:~\-]+")
-
 
 def check_package(name, test_mode):
     """Проверить имя пакета."""
@@ -64,4 +65,34 @@ def check_filter(substr, package):
     if substr and substr in package:
         raise ConfigError("имя пакета содержит подстроку фильтра")
     return substr
+
+
+@dataclass(frozen=True)
+class Config:
+    """Параметры, заданные пользователем."""
+
+    package: str
+    repo: str
+    test_mode: bool
+    version: str
+    output: str
+    max_depth: int
+    filter_substr: str
+
+    @classmethod
+    def from_args(cls, args):
+        """Проверить значения argparse и собрать конфигурацию."""
+        test_mode = args.test_mode
+        return cls(
+            package=check_package(args.package, test_mode),
+            repo=check_repo(args.repo, test_mode),
+            test_mode=test_mode,
+            version=check_version(args.version, test_mode),
+            output=check_output(args.output),
+            max_depth=check_depth(args.depth),
+            filter_substr=check_filter(args.filter, args.package),
+        )
+
+
+
 
