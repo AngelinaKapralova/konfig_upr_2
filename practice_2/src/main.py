@@ -1,5 +1,5 @@
 import sys
-
+import subprocess
 from apt_repo import AptRepository, download_index
 from config import parse_config
 from errors import AppError, ConfigError
@@ -36,7 +36,25 @@ def run(config):
     )
     title = "Обратные зависимости" if config.reverse else "Зависимости"
     print(f"{title} пакета {config.package}:")
-    print(format_graph(graph))
+
+    graph_str = format_graph(graph)
+    print(graph_str)
+
+    if config.output:
+        d2_filepath = config.output.replace('.svg', '.d2')
+
+        with open(d2_filepath, 'w', encoding='utf-8') as f:
+            f.write(graph_str)
+        print(f"Сохранен исходный файл: {d2_filepath}")
+
+        try:
+            subprocess.run(['d2', d2_filepath, config.output], check=True)
+            print(f"Сгенерирована картинка: {config.output}")
+        except FileNotFoundError:
+            print("Ошибка: утилита 'd2' не найдена в системе!", file=sys.stderr)
+        except subprocess.CalledProcessError as e:
+            print(f"Ошибка при работе утилиты d2: {e}", file=sys.stderr)
+
     return EXIT_OK
 
 
