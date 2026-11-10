@@ -133,3 +133,7 @@ def parse_config(argv=None):
     return Config.from_args(build_parser().parse_args(argv))
 
 
+def format_params(config):
+    """Вернуть параметры в формате «ключ: значение» по строке."""
+    pairs = asdict(config).items()
+    return "\n".join(f"{key}: {value}" for key, value in pairs)
