@@ -4,7 +4,7 @@ from pathlib import Path
 
 from file_repo import FileRepository
 from graph import build_graph
-import invert
+from graph import invert
 
 DATA = Path(__file__).parent / "data"
 
