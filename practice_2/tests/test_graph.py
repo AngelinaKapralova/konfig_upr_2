@@ -4,6 +4,7 @@ from pathlib import Path
 
 from file_repo import FileRepository
 from graph import build_graph
+import invert
 
 DATA = Path(__file__).parent / "data"
 
@@ -37,3 +38,11 @@ class GraphTest(unittest.TestCase):
         """Цикл не приводит к зацикливанию."""
         graph = graph_of("cycle.txt", "A", 10)
         self.assertEqual(graph, {"A": ["B"], "B": ["C"], "C": ["A"]})
+
+    def test_reverse(self):
+        """Обратные зависимости D — это B, C и далее A."""
+        repo = FileRepository.from_file(DATA / "simple.txt")
+        table = invert(repo.graph)
+        graph = build_graph("D", lambda n: table.get(n, []), 10)
+        self.assertEqual(graph["D"], ["B", "C"])
+        self.assertEqual(graph["B"], ["A"])
