@@ -48,3 +48,11 @@ def format_graph(graph):
         targets = ", ".join(deps) if deps else "—"
         lines.append(f"{name} -> {targets}")
     return "\n".join(lines)
+
+def invert(graph):
+    """Построить обратный граф: пакет -> пакеты, которые от него зависят."""
+    reverse = {}
+    for name, deps in graph.items():
+        for dep in deps:
+            reverse.setdefault(dep, []).append(name)
+    return reverse
