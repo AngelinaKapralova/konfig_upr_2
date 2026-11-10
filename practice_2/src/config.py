@@ -88,6 +88,7 @@ class Config:
     output: str
     max_depth: int
     filter_substr: str
+    reverse: bool
 
     @classmethod
     def from_args(cls, args):
@@ -101,6 +102,7 @@ class Config:
             output=check_output(args.output),
             max_depth=check_depth(args.depth),
             filter_substr=check_filter(args.filter, args.package),
+            reverse=args.reverse,
         )
 
 
@@ -125,6 +127,8 @@ def build_parser():
                         help="максимальная глубина анализа")
     parser.add_argument("-f", "--filter", default="",
                         help="не учитывать пакеты с этой подстрокой в имени")
+    parser.add_argument("-R", "--reverse", action="store_true",
+                        help="вывести обратные зависимости пакета")
     return parser
 
 

@@ -4,7 +4,7 @@ from apt_repo import AptRepository, download_index
 from config import parse_config
 from errors import AppError, ConfigError
 from file_repo import FileRepository
-from graph import build_graph, format_graph
+from graph import build_graph, format_graph, invert
 
 EXIT_OK = 0
 EXIT_RUNTIME_ERROR = 1
@@ -18,16 +18,24 @@ def load_repository(config):
     return AptRepository(download_index(config.repo))
 
 
+def neighbors_func(repo, reverse):
+    """Вернуть функцию «пакет -> соседи» для прямого или обратного обхода."""
+    table = invert(repo.graph) if reverse else repo.graph
+    return lambda name: table.get(name, [])
+
+
 def run(config):
-    """Построить граф зависимостей и вывести его в виде текста."""
+    """Построить граф прямых или обратных зависимостей и вывести его."""
     repo = load_repository(config)
     repo.direct(config.package, config.version)
     graph = build_graph(
         config.package,
-        lambda name: repo.graph.get(name, []),
+        neighbors_func(repo, config.reverse),
         config.max_depth,
         config.filter_substr,
     )
+    title = "Обратные зависимости" if config.reverse else "Зависимости"
+    print(f"{title} пакета {config.package}:")
     print(format_graph(graph))
     return EXIT_OK
 
