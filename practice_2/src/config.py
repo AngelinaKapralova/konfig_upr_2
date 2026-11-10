@@ -1,4 +1,5 @@
 """Разбор и проверка параметров командной строки."""
+import argparse
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -13,6 +14,15 @@ OUTPUT_SUFFIX = ".svg"
 APT_NAME_RE = re.compile(r"[a-z0-9][a-z0-9+.\-]+")
 TEST_NAME_RE = re.compile(r"[A-Z]+")
 VERSION_RE = re.compile(r"[0-9A-Za-z.+:~\-]+")
+
+
+class ArgParser(argparse.ArgumentParser):
+    """Парсер, который сообщает об ошибках через ConfigError."""
+
+    def error(self, message):
+        """Бросить ConfigError вместо завершения процесса."""
+        raise ConfigError(message)
+
 
 def check_package(name, test_mode):
     """Проверить имя пакета."""
@@ -94,5 +104,32 @@ class Config:
         )
 
 
+def build_parser():
+    """Создать парсер опций командной строки."""
+    parser = ArgParser(
+        prog="depgraph",
+        description="Граф зависимостей пакетов apt (Ubuntu).",
+    )
+    parser.add_argument("-p", "--package", required=True,
+                        help="имя анализируемого пакета")
+    parser.add_argument("-r", "--repo", required=True,
+                        help="URL файла Packages(.gz) или путь к файлу "
+                             "тестового репозитория")
+    parser.add_argument("-t", "--test-mode", action="store_true",
+                        help="читать тестовый репозиторий из файла")
+    parser.add_argument("-v", "--version", default="",
+                        help="версия пакета (в тестовом режиме не нужна)")
+    parser.add_argument("-o", "--output", default="graph.svg",
+                        help="имя выходного SVG-файла")
+    parser.add_argument("-d", "--depth", type=int, default=DEFAULT_DEPTH,
+                        help="максимальная глубина анализа")
+    parser.add_argument("-f", "--filter", default="",
+                        help="не учитывать пакеты с этой подстрокой в имени")
+    return parser
+
+
+def parse_config(argv=None):
+    """Разобрать аргументы и вернуть проверенную конфигурацию."""
+    return Config.from_args(build_parser().parse_args(argv))
 
 
