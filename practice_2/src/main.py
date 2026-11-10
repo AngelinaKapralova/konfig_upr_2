@@ -1,18 +1,22 @@
 """Точка входа: CLI-инструмент графа зависимостей пакетов apt."""
 import sys
-
-from config import format_params, parse_config
+from apt_repo import AptRepository, download_index
+from config import parse_config
 from errors import AppError, ConfigError
 
 EXIT_OK = 0
 EXIT_RUNTIME_ERROR = 1
 EXIT_CONFIG_ERROR = 2
 
-
 def run(config):
-    """Выполнить работу этапа и вернуть код завершения."""
-    print(format_params(config))
+    """Вывести прямые зависимости пакета из репозитория по URL."""
+    repo = AptRepository(download_index(config.repo))
+    deps = repo.direct(config.package, config.version)
+    print(f"Прямые зависимости {config.package} {config.version}:")
+    for name in deps:
+        print(f"  {name}")
     return EXIT_OK
+
 
 
 def main(argv=None):

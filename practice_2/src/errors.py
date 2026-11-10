@@ -8,3 +8,5 @@ class AppError(Exception):
 class ConfigError(AppError):
     """Некорректные параметры командной строки."""
 
+class RepoError(AppError):
+    """Ошибка чтения или разбора репозитория."""
