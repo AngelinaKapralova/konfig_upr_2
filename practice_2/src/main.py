@@ -5,6 +5,7 @@ from config import parse_config
 from errors import AppError, ConfigError
 from file_repo import FileRepository
 from graph import build_graph, format_graph, invert
+from d2_export import to_d2
 
 EXIT_OK = 0
 EXIT_RUNTIME_ERROR = 1
@@ -42,9 +43,11 @@ def run(config):
 
     if config.output:
         d2_filepath = config.output.replace('.svg', '.d2')
+        d2_text = to_d2(graph, config.reverse, repo.labels)
 
         with open(d2_filepath, 'w', encoding='utf-8') as f:
-            f.write(graph_str)
+            f.write(d2_text)
+
         print(f"Сохранен исходный файл: {d2_filepath}")
 
         try:
