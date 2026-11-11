@@ -1,16 +1,35 @@
-curl -> libc6, libcurl4, zlib1g
-libc6 -> libgcc-s1, libcrypt1
-libcurl4 -> libbrotli1, libc6, libgssapi-krb5-2, libidn2-0, libldap-2.5-0, libnghttp2-14, libpsl5, librtmp1, libssh-4, libssl3, libzstd1, zlib1g
-zlib1g -> libc6
-libgcc-s1 -> —
-libcrypt1 -> —
-libbrotli1 -> —
-libgssapi-krb5-2 -> —
-libidn2-0 -> —
-libldap-2.5-0 -> —
-libnghttp2-14 -> —
-libpsl5 -> —
-librtmp1 -> —
-libssh-4 -> —
-libssl3 -> —
-libzstd1 -> —
+direction: right
+"curl"
+"curl" -> "libc6": "(>= 2.34)"
+"curl" -> "libcurl4": "(= 7.81.0-1)"
+"curl" -> "zlib1g": "(>= 1:1.1.4)"
+"libc6"
+"libc6" -> "libgcc-s1"
+"libc6" -> "libcrypt1": "(>= 1:4.4.10-10ubuntu4)"
+"libcurl4"
+"libcurl4" -> "libbrotli1": "(>= 0.6.0)"
+"libcurl4" -> "libc6": "(>= 2.34)"
+"libcurl4" -> "libgssapi-krb5-2": "(>= 1.17)"
+"libcurl4" -> "libidn2-0": "(>= 0.6)"
+"libcurl4" -> "libldap-2.5-0": "(>= 2.5.4)"
+"libcurl4" -> "libnghttp2-14": "(>= 1.12.0)"
+"libcurl4" -> "libpsl5": "(>= 0.16.0)"
+"libcurl4" -> "librtmp1": "(>= 2.4+20131018.git79459a2-3~)"
+"libcurl4" -> "libssh-4": "(>= 0.9.0)"
+"libcurl4" -> "libssl3": "(>= 3.0.0~~alpha1)"
+"libcurl4" -> "libzstd1": "(>= 1.4.0)"
+"libcurl4" -> "zlib1g": "(>= 1:1.1.4)"
+"zlib1g"
+"zlib1g" -> "libc6": "(>= 2.14)"
+"libgcc-s1"
+"libcrypt1"
+"libbrotli1"
+"libgssapi-krb5-2"
+"libidn2-0"
+"libldap-2.5-0"
+"libnghttp2-14"
+"libpsl5"
+"librtmp1"
+"libssh-4"
+"libssl3"
+"libzstd1"

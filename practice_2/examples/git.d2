@@ -1,26 +1,58 @@
-git -> libc6, libcurl3-gnutls, libexpat1, libpcre2-8-0, zlib1g, perl, liberror-perl, git-man
-libc6 -> libgcc-s1, libcrypt1
-libcurl3-gnutls -> libbrotli1, libc6, libgnutls30, libgssapi-krb5-2, libidn2-0, libldap-2.5-0, libnettle8, libnghttp2-14, libpsl5, librtmp1, libssh-4, libzstd1, zlib1g
-libexpat1 -> libc6
-libpcre2-8-0 -> libc6
-zlib1g -> libc6
-perl -> perl-base, perl-modules-5.34, libperl5.34, dpkg
-liberror-perl -> perl
-git-man -> —
-libgcc-s1 -> —
-libcrypt1 -> —
-libbrotli1 -> —
-libgnutls30 -> —
-libgssapi-krb5-2 -> —
-libidn2-0 -> —
-libldap-2.5-0 -> —
-libnettle8 -> —
-libnghttp2-14 -> —
-libpsl5 -> —
-librtmp1 -> —
-libssh-4 -> —
-libzstd1 -> —
-perl-base -> —
-perl-modules-5.34 -> —
-libperl5.34 -> —
-dpkg -> —
+direction: right
+"git"
+"git" -> "libc6": "(>= 2.34)"
+"git" -> "libcurl3-gnutls": "(>= 7.56.1)"
+"git" -> "libexpat1": "(>= 2.0.1)"
+"git" -> "libpcre2-8-0": "(>= 10.34)"
+"git" -> "zlib1g": "(>= 1:1.2.0)"
+"git" -> "perl"
+"git" -> "liberror-perl"
+"git" -> "git-man": "(<< 1:2.34.1-.)"
+"libc6"
+"libc6" -> "libgcc-s1"
+"libc6" -> "libcrypt1": "(>= 1:4.4.10-10ubuntu4)"
+"libcurl3-gnutls"
+"libcurl3-gnutls" -> "libbrotli1": "(>= 0.6.0)"
+"libcurl3-gnutls" -> "libc6": "(>= 2.34)"
+"libcurl3-gnutls" -> "libgnutls30": "(>= 3.7.2)"
+"libcurl3-gnutls" -> "libgssapi-krb5-2": "(>= 1.17)"
+"libcurl3-gnutls" -> "libidn2-0": "(>= 0.6)"
+"libcurl3-gnutls" -> "libldap-2.5-0": "(>= 2.5.4)"
+"libcurl3-gnutls" -> "libnettle8"
+"libcurl3-gnutls" -> "libnghttp2-14": "(>= 1.12.0)"
+"libcurl3-gnutls" -> "libpsl5": "(>= 0.16.0)"
+"libcurl3-gnutls" -> "librtmp1": "(>= 2.4+20131018.git79459a2-3~)"
+"libcurl3-gnutls" -> "libssh-4": "(>= 0.9.0)"
+"libcurl3-gnutls" -> "libzstd1": "(>= 1.4.0)"
+"libcurl3-gnutls" -> "zlib1g": "(>= 1:1.1.4)"
+"libexpat1"
+"libexpat1" -> "libc6": "(>= 2.25)"
+"libpcre2-8-0"
+"libpcre2-8-0" -> "libc6": "(>= 2.14)"
+"zlib1g"
+"zlib1g" -> "libc6": "(>= 2.14)"
+"perl"
+"perl" -> "perl-base": "(= 5.34.0-3ubuntu1)"
+"perl" -> "perl-modules-5.34": "(>= 5.34.0-3ubuntu1)"
+"perl" -> "libperl5.34": "(= 5.34.0-3ubuntu1)"
+"perl" -> "dpkg": "(>= 1.17.17)"
+"liberror-perl"
+"liberror-perl" -> "perl"
+"git-man"
+"libgcc-s1"
+"libcrypt1"
+"libbrotli1"
+"libgnutls30"
+"libgssapi-krb5-2"
+"libidn2-0"
+"libldap-2.5-0"
+"libnettle8"
+"libnghttp2-14"
+"libpsl5"
+"librtmp1"
+"libssh-4"
+"libzstd1"
+"perl-base"
+"perl-modules-5.34"
+"libperl5.34"
+"dpkg"
