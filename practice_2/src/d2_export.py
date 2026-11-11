@@ -14,18 +14,28 @@ def quote(name):
     return f'"{escaped}"'
 
 
-def to_d2(graph, reverse=False):
-    """Построить текст D2: узлы и стрелки «зависит от».
+def edge(source, target, label):
+    """Вернуть стрелку D2; условие версии пишется подписью в скобках."""
+    line = f"{quote(source)} -> {quote(target)}"
+    if label:
+        line += f": {quote('(' + label + ')')}"
+    return line
+
+
+def to_d2(graph, reverse=False, labels=None):
+    """Построить текст D2: узлы и стрелки «зависит от» с подписями.
 
     В режиме reverse стрелки разворачиваются обратно, чтобы
     стрелка всегда шла от зависящего пакета к тому, от кого он зависит.
     """
+    labels = labels or {}
     lines = ["direction: right"]
     for name, deps in graph.items():
         lines.append(quote(name))
         for dep in deps:
             source, target = (dep, name) if reverse else (name, dep)
-            lines.append(f"{quote(source)} -> {quote(target)}")
+            label = labels.get((source, target))
+            lines.append(edge(source, target, label))
     return "\n".join(lines) + "\n"
 
 
