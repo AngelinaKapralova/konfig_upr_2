@@ -32,6 +32,7 @@ class FileRepository:
     def __init__(self, text):
         """Разобрать текст описания графа."""
         self.graph = parse_graph_text(text)
+        self.labels = {}
 
     @classmethod
     def from_file(cls, path):

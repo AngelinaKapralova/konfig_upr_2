@@ -11,6 +11,7 @@ GZIP_MAGIC = b"\x1f\x8b"
 DEPENDS_FIELDS = ("Depends", "Pre-Depends")
 VERSION_PART_RE = re.compile(r"\(.*?\)")
 ARCH_PART_RE = re.compile(r"\[.*?\]")
+CONSTRAINT_RE = re.compile(r"\((.*?)\)")
 
 
 def download_index(url):
@@ -68,6 +69,24 @@ def depends_of(fields):
                 names.append(name)
     return names
 
+def parse_constraints(value):
+    """Вернуть {имя: условие версии} из строки Depends."""
+    result = {}
+    for group in value.split(","):
+        first = group.split("|")[0]
+        match = CONSTRAINT_RE.search(first)
+        name = clean_name(first)
+        if name and match:
+            result[name] = match.group(1).strip()
+    return result
+
+
+def constraints_of(fields):
+    """Собрать условия версий из Depends и Pre-Depends."""
+    result = {}
+    for key in DEPENDS_FIELDS:
+        result.update(parse_constraints(fields.get(key, "")))
+    return result
 
 class AptRepository:
     """Индекс Packages.
@@ -80,6 +99,7 @@ class AptRepository:
         """Построить индекс по тексту файла Packages."""
         self.graph = {}
         self.versions = {}
+        self.labels = {}
         for block in text.split("\n\n"):
             self.add(parse_stanza(block))
 
@@ -91,7 +111,10 @@ class AptRepository:
             return
         deps = depends_of(fields)
         self.versions.setdefault(name, {})[version] = deps
-        self.graph.setdefault(name, deps)
+        if name not in self.graph:
+            self.graph[name] = deps
+            for dep, text in constraints_of(fields).items():
+                self.labels[(name, dep)] = text
 
     def direct(self, name, version=None):
         """Вернуть прямые зависимости пакета заданной версии."""
